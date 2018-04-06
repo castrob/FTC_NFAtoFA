@@ -137,10 +137,16 @@ class AF{
 		this.type = type;
 	}
 
+	public Estado getState(int id){
+		for(Estado e : states)
+			if(e.getId() == id)
+				return e;
+		return null;
+	}
+
 
 }
 class Tradutor{
-
 
 	/**
 	** Main Class to make the conversion
@@ -190,6 +196,39 @@ class Tradutor{
 		return e;
 	}
 
+	/**
+	 * Function to parse a String line into a Transition
+	 * @param String line - input string from XML
+	 * @return Transicao t - Transition completed parsed
+	 */
+
+	public static Transicao parseTransition(String line, AF af){
+
+		/* Removing characters */
+		line = line.replaceAll("transition", "");
+		line = line.replaceAll("/+", "");
+		line = line.replaceAll("<+", "");
+		line = line.replaceAll(">+", "");
+		line = line.replaceAll(" +", "");
+		line = line.replaceAll("from+", "/");
+		line = line.replaceAll("to+", "/");
+		line = line.replaceAll("read+", "");
+		line = line.replaceAll("//", "/");
+		line = line.replaceAll("\t+","");
+
+		String[] array = line.split("/");
+		Estado from = af.getState(Integer.parseInt(array[1]));
+		Estado to = af.getState(Integer.parseInt(array[2]));
+		char read = array[3].charAt(0);
+
+		Transicao t = new Transicao(from, to,read);
+		System.out.println(t);
+
+		return t;
+	}
+
+
+
 
 	public static void main (String[]args){
 		/*Input Variables*/
@@ -218,6 +257,17 @@ class Tradutor{
 				}
 
 				/* parsing transitions */
+				if(line.contains("<transition>")){
+					
+					String s = line;
+					
+					while ((line = br.readLine()) != null && (!line.contains("</transition>")))
+						s = s+line;
+
+					s = s.replaceAll("\t+", "").trim();
+					af.transitions.add(parseTransition(s, af));
+					s = "";
+				}
 			}
 		}catch(IOException e){
 			e.printStackTrace();
