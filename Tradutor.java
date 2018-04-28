@@ -123,25 +123,80 @@ class Transicao{
 class AF{
 	List<Estado> states; /*List of States*/
 	List<Transicao> transitions; /*List of transitions*/
+	String alphabet;
 	String type; /* AF = Standard, AFN = Nondeterministic Finite Automata, AFD = Deterministic Finite Automata */
 
 	public AF(){
 		this.states = new ArrayList<>();
 		this.transitions = new ArrayList<>();
-		type = "AF";
+		this.type = "AF";
+		this.alphabet = "";
 	}
 
-	public AF(List<Estado> states, List<Transicao> transitions, String type){
+	public AF(List<Estado> states, List<Transicao> transitions, String type, String alphabet){
 		this.states = states;
 		this.transitions = transitions;
 		this.type = type;
+		this.alphabet = alphabet;
 	}
+
+
+	public void generateAlphabet(){
+		for(Transicao t : transitions){
+			if(!(this.alphabet.contains(t.read)))
+				alphabet += t.read;
+		}
+	}
+
+
+	public String getAlphabet(){
+		if(this.alphabet.equals("")){
+			this.generateAlphabet();
+			return this.alphabet;
+		}else{
+			return this.alphabet;
+		}
+	}
+
 
 	public Estado getState(int id){
 		for(Estado e : states)
 			if(e.getId() == id)
 				return e;
 		return null;
+	}
+
+	public List<Estado> getInitialStates(){
+		List<Estado> initials = new ArrayList<Estado>();
+		for(Estado e : states){
+			if(e.getType() == 'I'){
+				initials.add(e);
+			}
+		}
+		return initials;
+	}
+
+
+	public AF convertToAFD( ){
+		if(this.type.equals("AFN")){
+			List<Estado> new_i = this.getInitialStates();
+			List<Transicao> new_t = new ArrayList<Transicao>();
+			AF afd = new AF(new_i, new_t, "AFD", this.getAlphabet());
+			for(Estado x : afd.states){
+				for(char a : afd.alphabet){
+					// gera estados
+					Estado y;
+					if(afd.states.contains(y) == false){
+						afd.states.add(y);
+					}
+					Transicao t = new Transicao(x, y, a);
+					afd.transitions.add(t);
+				}// for letra em alfabeto
+			}// for Estado X : E'
+		}else{
+			System.out.println("Already an AFD");
+		}
+
 	}
 
 
@@ -179,6 +234,7 @@ class Tradutor{
 		line = line.replaceAll("\"+", "");
 		line = line.replaceAll("//", "/");
 		line = line.replaceAll("\t+","");
+
 
 		String[] array = line.split("/");
 
@@ -236,6 +292,8 @@ class Tradutor{
 		FileReader fr = null;
 		String line;
 		AF af = new AF();
+
+		// parse from AFN
 		try{
 			fr = new FileReader("afn.jff");
 			br = new BufferedReader(fr);
@@ -279,7 +337,9 @@ class Tradutor{
 				i.printStackTrace();
 			}
 		}
-		
+
+		// Convert to AFD
+
 
 
 		}
