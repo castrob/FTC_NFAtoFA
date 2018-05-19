@@ -20,13 +20,12 @@ import java.util.Collections;
 
 class Parser{
 
+	int states;
+
 	/**
-	** Main Class to make the conversion
-	** Created by João Castro - April 6
-	** zzz 
-	**  zzzz 
-	**   zzzzz z zzz 
-	***/
+	* Main Class to make the conversion
+	* Created by João Castro - April 6
+	*/
 
 	/**
 	 * Function to parse a String line into a State
@@ -34,7 +33,6 @@ class Parser{
 	 * @return State e - State completed parsed
 	 */
 		public static State parseState(String line){
-
 		/* Removing characters */
 		line = line.replaceAll("state", "");
 		line = line.replaceAll("/+", "");
@@ -56,7 +54,7 @@ class Parser{
 		String[] array = line.split("/");
 
 		int id = Integer.parseInt(array[1]);
-		String name = array[2];
+		String name = array[2].replaceAll("q","");
 		double x = Double.parseDouble(array[3]);
 		double y = Double.parseDouble(array[4]);
 		char type = 'c';
@@ -76,7 +74,6 @@ class Parser{
 	 */
 
 	public static Transition parseTransition(String line, FiniteAutomata fa){
-
 		/* Removing characters */
 		line = line.replaceAll("transition", "");
 		line = line.replaceAll("/+", "");
@@ -95,8 +92,6 @@ class Parser{
 		char read = array[3].charAt(0);
 
 		Transition t = new Transition(from, to,read);
-		System.out.println(t);
-
 		return t;
 	}
 
@@ -108,42 +103,62 @@ class Parser{
 		BufferedReader br = null;
 		FileReader fr = null;
 		String line;
-		FiniteAutomata fa = new FiniteAutomata();
+		FiniteAutomata fa;
 
-		// parse from FiniteAutomataN
+		// Parse from a JFLAP File
 		try{
-			fr = new FileReader("afn.jff");
+			fr = new FileReader("afn2.jff");
 			br = new BufferedReader(fr);
+			int states = 0;
+			fa = new FiniteAutomata();
 
 			/*Reading the entire file*/
 			while((line = br.readLine()) != null){
-
 				/* parsing states */
 				if(line.contains("<state ")){
-
 					String s = line;
-
 					while ((line = br.readLine()) != null && (!line.contains("</state>")))
 						s = s+line;
-
 					s = s.replaceAll("\t+", "").trim();
-					fa.states.add(parseState(s));
+					State state = parseState(s);
+					state.setName(""+(states++));
+					fa.states.add(state);
 					s = "";
 				}
-
 				/* parsing transitions */
 				if(line.contains("<transition>")){
-					
 					String s = line;
-					
 					while ((line = br.readLine()) != null && (!line.contains("</transition>")))
 						s = s+line;
-
 					s = s.replaceAll("\t+", "").trim();
 					fa.transitions.add(parseTransition(s, fa));
 					s = "";
 				}
 			}
+
+			//Will be needed to conversion
+				//generateAlphabet
+				String alphabet = fa.getAlphabet();
+				String[][] transitionTable = fa.getTransitionTable();
+				if(fa.isDeterministic()){
+					System.out.println("DFA");
+					fa.setType("DFA");
+				}else{
+					System.out.println("NFA");
+					fa.setType("NFA");
+					// Convert to DFA
+					fa.printAutomata();
+					fa.printTransTable();
+					FiniteAutomata dfa = fa.convert();
+					dfa.printAutomata();
+					if(dfa.isDeterministic()){
+						dfa.simulate("0111");
+						System.out.println(dfa.toXML());
+					}
+				}
+
+
+
 		}catch(IOException e){
 			e.printStackTrace();
 		}finally{
@@ -155,7 +170,6 @@ class Parser{
 			}
 		}
 
-		// Convert to DFA
 
 
 
