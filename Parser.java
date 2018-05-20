@@ -17,6 +17,8 @@ import java.io.InputStreamReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Collections;
+import java.io.FileWriter;
+import java.io.PrintWriter;
 
 class Parser{
 
@@ -104,10 +106,14 @@ class Parser{
 		FileReader fr = null;
 		String line;
 		FiniteAutomata fa;
-
+		BufferedReader io = new BufferedReader(new InputStreamReader(System.in));
+		
+		System.out.println("Conversor de Automatos Finitos Nao Deterministicos para Automatos Finitos Deterministicos!!");		
+		System.out.println("Favor inserir o nome do arquivo incluindo sua extensão. Ex(afn.jff)");
 		// Parse from a JFLAP File
 		try{
-			fr = new FileReader("afn2.jff");
+		String nomeArq = io.readLine();
+			fr = new FileReader(nomeArq);
 			br = new BufferedReader(fr);
 			int states = 0;
 			fa = new FiniteAutomata();
@@ -137,23 +143,68 @@ class Parser{
 			}
 
 			//Will be needed to conversion
-				//generateAlphabet
 				String alphabet = fa.getAlphabet();
 				String[][] transitionTable = fa.getTransitionTable();
+				/* if deterministic, give the user option to test words */
 				if(fa.isDeterministic()){
-					System.out.println("DFA");
 					fa.setType("DFA");
+					System.out.println("Este Automato ja e' deterministico! Deseja realizar testes ?");
+					System.out.println("s/n ?");
+					String test = io.readLine();
+					if(test.toUpperCase().equals("S")){
+						System.out.println("Favor entrar com a palavra desejada!");
+						System.out.println("Caso deseja terminar, digite: TERMINAR");	
+						System.out.print("Entrada: ");								
+						String input = io.readLine();
+						while(!input.toUpperCase().equals("TERMINAR")){
+							fa.simulate(input);
+							System.out.println("Favor entrar com a palavra desejada!");
+							System.out.println("Caso deseja terminar, digite: TERMINAR");
+							System.out.print("Entrada: ");
+							input = io.readLine();
+						}
+					}
 				}else{
-					System.out.println("NFA");
+					/* if not deterministic, convert and give the user oportunity to run tests */
+					System.out.println("Automato nao deterministico! Realizando conversao...");
 					fa.setType("NFA");
 					// Convert to DFA
+					System.out.println("Automato Nao deterministico: ");
 					fa.printAutomata();
 					fa.printTransTable();
 					FiniteAutomata dfa = fa.convert();
-					dfa.printAutomata();
 					if(dfa.isDeterministic()){
-						dfa.simulate("0111");
-						System.out.println(dfa.toXML());
+						System.out.println("Automato convertido com sucesso ! ");
+						System.out.println("Automato resultado: ");
+						dfa.printAutomata();
+						dfa.printTransTable();
+						System.out.println();
+						System.out.println("Deseja realizar testes ?");
+						System.out.print("s/n? ");
+						String test = io.readLine();
+						if(test.toUpperCase().equals("S")){
+							System.out.println("Favor entrar com a palavra desejada!");
+							System.out.println("Caso deseja terminar, digite: TERMINAR");	
+							System.out.print("Entrada: ");											
+							String input = io.readLine();
+							while(!input.toUpperCase().equals("TERMINAR")){
+								dfa.simulate(input);
+								System.out.println("Favor entrar com a palavra desejada!");
+								System.out.println("Caso deseja terminar, digite: TERMINAR");
+								System.out.print("Entrada: ");
+								input = io.readLine();
+							}
+						}
+							String novoNomArq = "DFA_" + nomeArq;
+							System.out.println("Automato salvo no arquivo: " + novoNomArq);
+							FileWriter arq = new FileWriter(novoNomArq);
+							PrintWriter gravarArq = new PrintWriter(arq);
+							gravarArq.printf(dfa.toXML());
+							gravarArq.close();
+					}else{
+						System.out.println("Nao foi possivel realizar a conversao!");
+						System.out.println("Automato resultado continua nao deterministico!");
+						dfa.printAutomata();
 					}
 				}
 
@@ -169,9 +220,5 @@ class Parser{
 				i.printStackTrace();
 			}
 		}
-
-
-
-
 		}
 }

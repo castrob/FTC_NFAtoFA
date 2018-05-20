@@ -469,8 +469,13 @@ class FiniteAutomata{
 		}
 	}
 
-
+	/**
+	 * Function to test if a given word belongs to this automata
+	 * @param String word - input word
+	 * @return Boolean 
+	 */
 	public Boolean simulate(String word){
+		Boolean belongs;
 		Queue<Character> input = new LinkedList<Character>();
 		State s = this.states.get(0);
 		
@@ -487,12 +492,16 @@ class FiniteAutomata{
 		}
 
 		if(input.isEmpty() && s != null){
-			if(s.getType() == 'F')
-				System.out.println("Palavra pertence!");
-			else
+			if(s.getType() == 'F'){
+			System.out.println("Palavra pertence!");
+			belongs = true;				
+			}else{
 			System.out.println("Palavra não pertence!");
+			belongs = false;				
+			}
 		}else if(input.isEmpty() == false && s == null){
 			System.out.println("Palavra não pertence!");
+			belongs = false;
 		}
 
 		return false;
@@ -520,6 +529,11 @@ class FiniteAutomata{
 	 * Method to print the Transition Table
 	 */
 	public void printTransTable(){
+		if(transitionTable == null){
+			this.getTransitionTable();
+		}
+		System.out.println("Tabela de transicao: ");
+
 		for( int i = 0; i < states.size(); i++){
 			for(int j = 0; j < alphabet.length(); j++){
 				System.out.print(transitionTable[i][j]+ " ");
