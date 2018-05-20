@@ -81,6 +81,8 @@ class State{
 			return "\n\t\t<state id=\"" + this.id + "\"" +  " name=\"" + this.name + "\"" + ">\n\t\t\t<x>" + this.x + "</x>\n\t\t\t<y>" + this.y + "</y>\n\t\t\t<initial/>\n\t\t</state>";
 			} else if (this.type == 'F'){
 				return "\n\t\t<state id=\"" + this.id + "\"" +  " name=\"" + this.name + "\"" + ">\n\t\t\t<x>" + this.x + "</x>\n\t\t\t<y>" + this.y + "</y>\n\t\t\t<final/>\n\t\t</state>";
+			}else if(this.type == 'S'){
+				return "\n\t\t<state id=\"" + this.id + "\"" +  " name=\"" + this.name + "\"" + ">\n\t\t\t<x>" + this.x + "</x>\n\t\t\t<y>" + this.y + "</y>\n\t\t\t<initial/>\n\t\t<final/>\n\t\t</state>";
 			}else{
 				return "\n\t\t<state id=\"" + this.id + "\"" +  " name=\"" + this.name + "\"" + ">\n\t\t\t<x>" + this.x + "</x>\n\t\t\t<y>" + this.y + "</y>\n\t\t</state>";
 			}
@@ -222,8 +224,9 @@ class FiniteAutomata{
 	public List<State> getInitialStates(){
 		List<State> initials = new ArrayList<State>();
 		for(State e : states){
-			if(e.getType() == 'I'){
+			if(e.getType() == 'I' || e.getType() == 'S'){
 				initials.add(e);
+				System.out.println(e);
 			}
 		}
 		return initials;
@@ -235,7 +238,7 @@ class FiniteAutomata{
 	public List<State> getFinalStates(){
 		List<State> finals = new ArrayList<State>();
 		for(State e : states){
-			if(e.getType() == 'F'){
+			if(e.getType() == 'F' || e.getType() == 'S'){
 				finals.add(e);
 			}
 		}
@@ -407,9 +410,11 @@ class FiniteAutomata{
 		String[] strSplit = s.name.split(",");
 		String name = "";
 		for(int i = 0; i < strSplit.length; i++){
-			int a = Integer.parseInt(strSplit[i]);
-			int b = this.getCharOnAlphabet(c);
-			name += "," + this.transitionTable[a][b];
+			if(!strSplit[i].equals("")){
+				int a = Integer.parseInt(strSplit[i]);
+				int b = this.getCharOnAlphabet(c);
+				name += "," + this.transitionTable[a][b];
+			}
 		}
 		return this.fixName(name);
 	}
@@ -438,7 +443,7 @@ class FiniteAutomata{
 					State y;
 					if(dfa.hasState(name) == false){
 						// avoiding duplicated states for not having a error state
-						if(name.charAt(name.length()-1) != ','){
+						// if(name.charAt(0) != ','){
 							char type = 'c';
 							//Testing if a final state
 							for(State e : new_f){
@@ -453,7 +458,7 @@ class FiniteAutomata{
 							dfa.states.add(y);
 							Transition t = new Transition(x, y, a);
 							dfa.transitions.add(t);
-						}
+						//  }
 					}else{
 						y = dfa.getState(name);
 						Transition t = new Transition(x, y, a);
@@ -475,11 +480,11 @@ class FiniteAutomata{
 	 * @return Boolean 
 	 */
 	public Boolean simulate(String word){
-		Boolean belongs;
+		Boolean belongs = true;
 		Queue<Character> input = new LinkedList<Character>();
 		State s = this.states.get(0);
 		
-		if(s.getType()!='I'){
+		if(s.getType()!='I' && s.getType() != 'S'){
 			s = this.getState('I');
 		}
 
@@ -492,7 +497,7 @@ class FiniteAutomata{
 		}
 
 		if(input.isEmpty() && s != null){
-			if(s.getType() == 'F'){
+			if(s.getType() == 'F' || s.getType() == 'S'){
 			System.out.println("Palavra pertence!");
 			belongs = true;				
 			}else{
@@ -502,9 +507,12 @@ class FiniteAutomata{
 		}else if(input.isEmpty() == false && s == null){
 			System.out.println("Palavra não pertence!");
 			belongs = false;
+		}else if (input.isEmpty() && s == null){
+			System.out.println("Palavra não pertence!");
+			belongs = false;
 		}
 
-		return false;
+		return belongs;
 	}
 
 

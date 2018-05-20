@@ -61,10 +61,17 @@ class Parser{
 		double y = Double.parseDouble(array[4]);
 		char type = 'c';
 
-		if(array.length > 5)
-		  type = array[5].charAt(0);
+		if(array.length > 5){
+			if(array[5].equals("IF"))
+				type = 'S';
+			else{
+				type = array[5].charAt(0);
+			}
+
+		}
 
 		State e = new State(name, id, x, y, type);
+		System.out.println(e);
 
 		return e;
 	}

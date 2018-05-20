@@ -1,0 +1,194 @@
+Conversor de Automatos Finitos Nao Deterministicos para Automatos Finitos Deterministicos!!
+Favor inserir o nome do arquivo incluindo sua extensão. Ex(afn.jff)
+State: 0
+ id: 0
+ x: 117.0
+ y: 108.0
+ Type: I
+
+State: 1
+ id: 1
+ x: 237.0
+ y: 107.0
+ Type: c
+
+State: 2
+ id: 2
+ x: 367.0
+ y: 106.0
+ Type: c
+
+State: 3
+ id: 3
+ x: 492.0
+ y: 109.0
+ Type: F
+
+Automato nao deterministico! Realizando conversao...
+Automato Nao deterministico: 
+Alphabet: 01
+States: 
+State: 0
+ id: 0
+ x: 117.0
+ y: 108.0
+ Type: I
+
+State: 1
+ id: 1
+ x: 237.0
+ y: 107.0
+ Type: c
+
+State: 2
+ id: 2
+ x: 367.0
+ y: 106.0
+ Type: c
+
+State: 3
+ id: 3
+ x: 492.0
+ y: 109.0
+ Type: F
+
+Transitions: 
+Transition from 0 to 0 when input = 0
+
+Transition from 0 to 0 when input = 1
+
+Transition from 0 to 1 when input = 1
+
+Transition from 2 to 3 when input = 1
+
+Transition from 2 to 3 when input = 0
+
+Transition from 1 to 2 when input = 1
+
+Transition from 1 to 2 when input = 0
+
+Tabela de transicao: 
+0 0,1 
+2 2 
+3 3 
+  
+State: 0
+ id: 0
+ x: 117.0
+ y: 108.0
+ Type: I
+
+Automato convertido com sucesso ! 
+Automato resultado: 
+Alphabet: 01
+States: 
+State: 0
+ id: 0
+ x: 117.0
+ y: 108.0
+ Type: I
+
+State: 0,1
+ id: 1
+ x: 0.0
+ y: 0.0
+ Type: c
+
+State: 0,2
+ id: 2
+ x: 0.0
+ y: 0.0
+ Type: c
+
+State: 0,1,2
+ id: 3
+ x: 0.0
+ y: 0.0
+ Type: c
+
+State: 0,3
+ id: 4
+ x: 0.0
+ y: 0.0
+ Type: F
+
+State: 0,1,3
+ id: 5
+ x: 0.0
+ y: 0.0
+ Type: F
+
+State: 0,2,3
+ id: 6
+ x: 0.0
+ y: 0.0
+ Type: F
+
+State: 0,1,2,3
+ id: 7
+ x: 0.0
+ y: 0.0
+ Type: F
+
+Transitions: 
+Transition from 0 to 0 when input = 0
+
+Transition from 0 to 1 when input = 1
+
+Transition from 1 to 2 when input = 0
+
+Transition from 1 to 3 when input = 1
+
+Transition from 2 to 4 when input = 0
+
+Transition from 2 to 5 when input = 1
+
+Transition from 3 to 6 when input = 0
+
+Transition from 3 to 7 when input = 1
+
+Transition from 4 to 0 when input = 0
+
+Transition from 4 to 1 when input = 1
+
+Transition from 5 to 2 when input = 0
+
+Transition from 5 to 3 when input = 1
+
+Transition from 6 to 4 when input = 0
+
+Transition from 6 to 5 when input = 1
+
+Transition from 7 to 6 when input = 0
+
+Transition from 7 to 7 when input = 1
+
+Tabela de transicao: 
+0 0,1 
+0,2 0,1,2 
+0,3 0,1,3 
+0,2,3 0,1,2,3 
+0 0,1 
+0,2 0,1,2 
+0,3 0,1,3 
+0,2,3 0,1,2,3 
+
+Deseja realizar testes ?
+s/n? Favor entrar com a palavra desejada!
+Caso deseja terminar, digite: TERMINAR
+Entrada: Palavra não pertence!
+Favor entrar com a palavra desejada!
+Caso deseja terminar, digite: TERMINAR
+Entrada: Palavra não pertence!
+Favor entrar com a palavra desejada!
+Caso deseja terminar, digite: TERMINAR
+Entrada: Palavra não pertence!
+Favor entrar com a palavra desejada!
+Caso deseja terminar, digite: TERMINAR
+Entrada: Palavra pertence!
+Favor entrar com a palavra desejada!
+Caso deseja terminar, digite: TERMINAR
+Entrada: Palavra pertence!
+Favor entrar com a palavra desejada!
+Caso deseja terminar, digite: TERMINAR
+Entrada: Automato salvo no arquivo: DFA_afn2.jff
